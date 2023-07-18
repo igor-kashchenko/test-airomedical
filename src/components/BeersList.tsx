@@ -10,9 +10,10 @@ export const BeersList: React.FC = () => {
   const beers = useBeersStore((state) => state.beers);
   const fetchBeersRecipes = useBeersStore((state) => state.fetchBeers);
   const deleteBeers = useBeersStore((state) => state.deleteBeers);
+  const selectedBeers = useBeersStore((state) => state.selectedBeers);
+  const setSelectedBeers = useBeersStore((state) => state.setSelectedBeers);
 
   const [renderedBeers, setRenderedBeers] = useState<BeerRecipe[]>([]);
-  const [selectedBeers, setSelectedBeers] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasFetched, setHasFetched] = useState(false);
 
@@ -62,19 +63,9 @@ export const BeersList: React.FC = () => {
     setRenderedBeers(beers.slice(0, 15));
   }, [beers]);
 
-  const handleSelectBeers = (name: string) => {
-    setSelectedBeers((prev) => {
-      if (prev.includes(name)) {
-        return prev.filter((beerName) => beerName !== name);
-      } else {
-        return [...prev, name];
-      }
-    });
-  };
 
   const handleDeleteBeers = () => {
     deleteBeers(selectedBeers);
-    setSelectedBeers([]);
   };
 
   return (
@@ -83,7 +74,7 @@ export const BeersList: React.FC = () => {
         <BeerRecipeItem
           key={beer.id}
           beerRecipe={beer}
-          handleSelectBeers={handleSelectBeers}
+          handleSelectBeers={setSelectedBeers}
           selectedBeers={selectedBeers}
           index={i}
         />

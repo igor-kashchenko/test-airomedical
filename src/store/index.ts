@@ -23,8 +23,24 @@ export const useBeersStore = create<InitialState>()((set) => ({
   deleteBeers: (selectedBeers: string[]) => {
     set((state) => {
       return {
-        beers: state.beers.filter((beer) => !selectedBeers.includes(beer.name))
+        beers: state.beers.filter((beer) => !selectedBeers.includes(beer.name)),
+        selectedBeers: [],
       };
+    });
+
+
+  },
+  setSelectedBeers: (name: string) => {
+    set((state) => {
+      if (state.selectedBeers.includes(name)) {
+        return {
+          selectedBeers: state.selectedBeers.filter((beerName) => beerName !== name)
+        };
+      } else {
+        return {
+          selectedBeers: [...state.selectedBeers, name]
+        };
+      }
     });
   },
 }));

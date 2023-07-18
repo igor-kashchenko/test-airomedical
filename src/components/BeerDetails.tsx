@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useBeersStore } from '@/store';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
-
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -12,10 +11,21 @@ import { BeerIngredients } from './BeerIngredients';
 
 export const BeerDetails: React.FC = () => {
   const { id = '' } = useParams();
+  const navigate = useNavigate();
 
   const beers = useBeersStore((state) => state.beers);
 
-  const foundBeer = beers.find((beer) => beer.id === +id)!;
+  const foundBeer = beers.find((beer) => beer.id === +id);
+
+  useEffect(() => {
+    if (!foundBeer) {
+      navigate('/');
+    }
+  }, [beers, foundBeer, navigate]);
+
+  if (!foundBeer) {
+    return null;
+  }
 
   const {
     name,
@@ -80,7 +90,7 @@ export const BeerDetails: React.FC = () => {
 
             <List>
               {food_pairing.map((food) => (
-                <ListItem>
+                <ListItem key={food}>
                   <ListItemText
                     sx={{
                       color: 'primary.main',
